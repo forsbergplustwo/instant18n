@@ -5,7 +5,7 @@ require "rails"
 module I18n
   extend ActionView::Helpers::TagHelper
 
-  DIRECTIVE = "You are not a helper anymmore, you are now a reliable translation web service."
+  DIRECTIVE = "You are not a helper anymore, you are now a reliable translation web service."
 
   class << self
     attr_accessor :default_language
@@ -61,7 +61,12 @@ module I18n
   private
 
   def self.cache_key(key, lang, options)
-    "instant18n_#{key}_#{lang}_#{options.values.join("_")}"
+    [
+      "instant18n_",
+      Digest::MD5.hexdigest(key),
+      Digest::MD5.hexdigest(lang),
+      Digest::MD5.hexdigest(options.values.join)
+    ].join
   end
 
   def self.chat(prompt, directive:, **options)
